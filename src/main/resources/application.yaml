@@ -1,1 +1,31 @@
-spring.application.name=Kafka-monitor-service
+spring:
+  application:
+    name: Kafka-monitor-service
+  cloud:
+    function:
+      definition: consumeUserProfile
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+          auto-create-topics: true
+          consumer-properties:
+            key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          producer-properties:
+            key.serializer: org.apache.kafka.common.serialization.StringSerializer
+      default:
+        group: kafka-monitor-group
+      bindings:
+        consumeUserProfile-in-0:
+          destination: prod.user.profile.create
+        produceUserProfile-out-0:
+          destination: prod.user.profile.create
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kafka_monitor
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
